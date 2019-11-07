@@ -49,8 +49,7 @@ module.exports.tests.toESDocument = function(test) {
     var esDoc = doc.toESDocument();
 
     var expected = {
-      _index: 'example_index',
-      _type: 'example_type',
+      _index: 'pelias',
       _id: 'mysource:mylayer:myid',
       data: {
         layer: 'mylayer',
@@ -101,8 +100,7 @@ module.exports.tests.toESDocument = function(test) {
     var esDoc = doc.toESDocument();
 
     var expected = {
-      _index: 'example_index',
-      _type: 'example_type',
+      _index: 'pelias',
       _id: 'mysource:mylayer:myid',
       data: {
         source: 'mysource',
@@ -155,8 +153,7 @@ module.exports.tests.toESDocument = function(test) {
     var esDoc = doc.toESDocument();
 
     var expected = {
-      _index: 'example_index',
-      _type: 'example_type',
+      _index: 'pelias',
       _id: 'mysource:mylayer:myid',
       data: {
         source: 'mysource',
