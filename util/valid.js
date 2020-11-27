@@ -1,4 +1,3 @@
-
 var _ = require('lodash'),
     PeliasModelError = require('../errors').PeliasModelError;
 
@@ -119,4 +118,28 @@ module.exports.regex = {
 
     return module.exports;
   }
+};
+
+module.exports.dateInterval = function( val ){
+
+  if (!val.start) {
+    throw new PeliasModelError('missing property \'start\'');
+  }
+  
+  _.map(_.compact([val.start, val.end]), function(date) {
+    if(isNaN(Date.parse(date))){
+      throw new PeliasModelError(`invalid date ${date}`);
+    }
+  });
+
+  return this;
+};
+
+// verify that a is greater than or equal to b
+module.exports.geq = function( a, b ){
+  if ( a < b ){
+    throw new PeliasModelError(`${a} is not greater than or equal to ${b}`);
+  }
+
+  return this;
 };

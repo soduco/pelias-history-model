@@ -1,4 +1,3 @@
-
 module.exports.uppercase = function( val ){
   return val.toUpperCase();
 };
@@ -29,5 +28,21 @@ module.exports.toULLR = function( val ) {
     max_lat: val.upperLeft.lat,
     min_lon: val.upperLeft.lon,
     max_lon: val.lowerRight.lon
+  });
+};
+
+
+module.exports.date = function( val ){
+  return new Date(val);
+};
+
+module.exports.toDateInterval = function( start, end){
+  let yyyymmdd = function(date){ 
+    return date.toISOString().split('T')[0];
+  };
+  
+  return JSON.stringify({
+    start: yyyymmdd(start),
+    end: yyyymmdd(end)
   });
 };

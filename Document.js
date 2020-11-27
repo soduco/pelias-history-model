@@ -607,7 +607,6 @@ Document.prototype.getBoundingBox = function(){
   return this.bounding_box;
 };
 
-
 Document.prototype.isSupportedParent = (placetype) => {
   return parentFields.indexOf(placetype) !== -1;
 };
@@ -615,6 +614,24 @@ Document.prototype.isSupportedParent = (placetype) => {
 // return a clone so it's immutable
 Document.prototype.getParentFields = () => {
   return _.cloneDeep(parentFields);
+};
+
+Document.prototype.setValidTime = function( val ) {
+  
+  validate.truthy(val)
+  .type('object', val)
+  .dateInterval(val);
+
+  let start = transform.date(val.start);
+  let end = val.end ? transform.date(val.end) : start;
+
+  validate.geq(end, start);
+  this.valid_time = transform.toDateInterval(start, end);
+  return this;
+};
+
+Document.prototype.getValidTime = function(){
+  return this.valid_time;
 };
 
 // export

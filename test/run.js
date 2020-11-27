@@ -22,6 +22,7 @@ var tests = [
   require('./document/source_id.js'),
   require('./document/toESDocument.js'),
   require('./document/post.js'),
+  require('./document/valid_time.js'),
   require('./post/intersections.js'),
   require('./post/deduplication.js'),
   require('./post/seperable_street_names.js'),
