@@ -1,0 +1,15 @@
+image: node:latest
+
+stages:
+    - lint
+    - test
+jshint:
+    stage: lint
+    script:
+        - npm install -g jshint
+        - jshint .
+units:
+    stage: test
+    script:
+        - npm install --silent
+        - npm run test
