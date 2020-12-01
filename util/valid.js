@@ -117,20 +117,21 @@ module.exports.regex = {
     }
 
     return module.exports;
+  },
+
+  match: function(val, regex) {
+    if( !regex.test(val) ){
+      throw new PeliasModelError(`invalid regex test, ${val} should match ${regex}`);
+    }
+
+    return module.exports;
   }
 };
 
-module.exports.dateInterval = function( val ){
-
-  if (!val.start) {
-    throw new PeliasModelError('missing property \'start\'');
+module.exports.date = function( val ){
+  if ( isNaN(new Date(val, 0).getTime()) ){
+    throw new PeliasModelError(`invalid date ${val}`);
   }
-  
-  _.map(_.compact([val.start, val.end]), function(date) {
-    if(isNaN(Date.parse(date))){
-      throw new PeliasModelError(`invalid date ${date}`);
-    }
-  });
 
   return this;
 };
@@ -140,6 +141,5 @@ module.exports.geq = function( a, b ){
   if ( a < b ){
     throw new PeliasModelError(`${a} is not greater than or equal to ${b}`);
   }
-
   return this;
 };

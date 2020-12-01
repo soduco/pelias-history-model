@@ -616,17 +616,35 @@ Document.prototype.getParentFields = () => {
   return _.cloneDeep(parentFields);
 };
 
+// verify that the input is a string representing a valid ISO_31-11 year interval,
+// then marshal it into an object for ES.
 Document.prototype.setValidTime = function( val ) {
   
+  let re = /^(?<lp>[\(\[\]])?(?<ly>-?\d+)?,(?<ry>-?\d+)?(?<rp>[\)\[\]])?$|^(?<sy>-?\d+)$/;
+
   validate.truthy(val)
-  .type('object', val)
-  .dateInterval(val);
+  .type('string', val)
+  .regex.match(val, re); 
+  
+  let groups = val.match(re).groups;
+  let parsed = {
+    lpar: groups.lp,
+    lyear: parseInt(groups.ly),
+    ryear: parseInt(groups.ry),
+    rpar: groups.rp,
+    single: parseInt(groups.sy)
+  };
 
-  let start = transform.date(val.start);
-  let end = val.end ? transform.date(val.end) : start;
+  _.map(_.compact([parsed.lyear,parsed.ryear,parsed.single]), function(y){
+    validate.date(y);
+    validate.type('number', y);
+  });
+  
+  let interval = transform.toYearInterval(parsed);
+  
+  validate.geq(interval.end, interval.start);
 
-  validate.geq(end, start);
-  this.valid_time = transform.toDateInterval(start, end);
+  this.valid_time = interval;
   return this;
 };
 

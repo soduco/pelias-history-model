@@ -1,3 +1,4 @@
+
 module.exports.uppercase = function( val ){
   return val.toUpperCase();
 };
@@ -31,18 +32,28 @@ module.exports.toULLR = function( val ) {
   });
 };
 
-
-module.exports.date = function( val ){
-  return new Date(val);
-};
-
-module.exports.toDateInterval = function( start, end){
-  let yyyymmdd = function(date){ 
-    return date.toISOString().split('T')[0];
-  };
+module.exports.toYearInterval = function( val ){
+  const max_time = 8640000000000000;
   
-  return JSON.stringify({
-    start: yyyymmdd(start),
-    end: yyyymmdd(end)
-  });
+  const year_sup = new Date(max_time).getUTCFullYear();
+  const year_inf = new Date(-max_time).getUTCFullYear();
+  
+  //Replaces undefined values with minimum/maximum dates so e.g. interval (,) becomes (year_inf, year_sup).
+  let lower_bound = val.lyear? val.lyear : year_inf;
+  let upper_bound = val.ryear? val.ryear : year_sup;
+
+  if(val.single){
+    return {
+      start: val.single,
+      end: val.single
+    };
+  }
+
+  lower_bound += (val.lyear && ['(',']'].includes(val.lpar) && lower_bound > year_inf ) ? 1 : 0;
+  upper_bound -= (val.ryear && [')','['].includes(val.rpar) && upper_bound < year_sup ) ? 1 : 0;
+
+  return {
+    start: lower_bound,
+    end: upper_bound
+  };
 };
