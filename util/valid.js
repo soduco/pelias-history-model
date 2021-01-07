@@ -1,5 +1,6 @@
 var _ = require('lodash'),
-    PeliasModelError = require('../errors').PeliasModelError;
+    PeliasModelError = require('../errors').PeliasModelError,
+    transform = require('./transform');
 
 module.exports.type = function( type, val ){
   if( type.toLowerCase() === 'array' ){
@@ -128,15 +129,41 @@ module.exports.regex = {
   }
 };
 
-module.exports.date = function( val ){
-  if ( isNaN(new Date(val, 0).getTime()) ){
-    throw new PeliasModelError(`invalid date ${val}`);
+module.exports.timespan = function( val ){
+  // either start or end can be unset but not both
+  if (!(val.start || val.end)){
+    throw new PeliasModelError(`valid time must have at least one bound`);
   }
-
+  if( val.start ){
+    this.timespanExtremity(val.start);
+  }
+  if( val.end ){
+    this.timespanExtremity(val.end);
+  }
   return this;
 };
 
-// verify that a is greater than or equal to b
+module.exports.timespanExtremity = function( val ){
+  this.type('object', val).truthy(val);
+  // Contains either a 'in' element, or a pair or 'earliest' and 'latest' elements.
+  if( val.in ){
+    this.date(val.in);
+  }else if (val.earliest && val.latest){
+    this.date(val.earliest).date(val.latest);
+  }else{
+    throw new PeliasModelError(`invalid timespan ${val}`);
+  }
+  return this;
+};
+
+module.exports.date = function( val ){
+  let date = transform.parseDate(val);  
+  if ( isNaN(date.getTime()) ){
+    throw new PeliasModelError(`invalid date ${val}`);
+  }
+    return this;
+};
+
 module.exports.geq = function( a, b ){
   if ( a < b ){
     throw new PeliasModelError(`${a} is not greater than or equal to ${b}`);

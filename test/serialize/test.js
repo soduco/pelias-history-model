@@ -61,7 +61,8 @@ module.exports.tests.complete = function(test) {
       .setAddendum('geonames', { foreignkey: 1 })
       .setCentroid({ lon: 0.5, lat: 50.1 })
       .setShape(fixtures.new_zealand)
-      .setBoundingBox(fixtures.new_zealand_bbox);
+      .setBoundingBox(fixtures.new_zealand_bbox)
+      .setValidTime({ start: { in: '1850' },  end: { in: '1890' } });
 
     var s = serializeDeserialize( doc );
 
@@ -135,8 +136,14 @@ module.exports.tests.complete = function(test) {
       'addendum': {
         'wikipedia': { 'slug': 'HackneyCityFarm' },
         'geonames': { 'foreignkey': 1 }
-      }
+      },
 
+      // valid_time
+      'valid_time': { 'start': '1850-01-01',
+                      'end': '1890-01-01',
+                      //'start_daysfromepoch': -43829,
+                      //'end_daysfromepoch': -29219
+                     }
     }, 'valid document body');
 
     t.end();

@@ -104,7 +104,8 @@ Document.prototype.toESDocument = function() {
     popularity: this.popularity,
     population: this.population,
     addendum: {},
-    shape: this.shape
+    shape: this.shape,
+    valid_time: this.valid_time
   };
 
   // add encoded addendum namespaces
@@ -139,6 +140,9 @@ Document.prototype.toESDocument = function() {
   }
   if( !Object.keys( doc.shape || {} ).length ){
     delete doc.shape;
+  }
+  if (!this.valid_time) {
+    delete doc.valid_time;
   }
 
   return {
@@ -616,35 +620,22 @@ Document.prototype.getParentFields = () => {
   return _.cloneDeep(parentFields);
 };
 
-// verify that the input is a string representing a valid ISO_31-11 year interval,
-// then marshal it into an object for ES.
+// verify that the input is a string representing a valid LinkedPlaces 'timespan' element,
+// then marshal it into an ES-specific format.
 Document.prototype.setValidTime = function( val ) {
-  
-  let re = /^(?<lp>[\(\[\]])?(?<ly>-?\d+)?,(?<ry>-?\d+)?(?<rp>[\)\[\]])?$|^(?<sy>-?\d+)$/;
-
   validate.truthy(val)
-  .type('string', val)
-  .regex.match(val, re); 
-  
-  let groups = val.match(re).groups;
-  let parsed = {
-    lpar: groups.lp,
-    lyear: parseInt(groups.ly),
-    ryear: parseInt(groups.ry),
-    rpar: groups.rp,
-    single: parseInt(groups.sy)
-  };
+  .type('object', val)
+  .timespan(val);
 
-  _.map(_.compact([parsed.lyear,parsed.ryear,parsed.single]), function(y){
-    validate.date(y);
-    validate.type('number', y);
-  });
+  let vtime = transform.toTimeInterval(val);
   
-  let interval = transform.toYearInterval(parsed);
-  
-  validate.geq(interval.end, interval.start);
+  validate.geq(vtime.end, vtime.start);
 
-  this.valid_time = interval;
+  vtime.start = transform.toESStrictDate(vtime.start);
+  vtime.end = transform.toESStrictDate(vtime.end);
+  
+  this.valid_time = vtime;
+
   return this;
 };
 

@@ -32,28 +32,32 @@ module.exports.toULLR = function( val ) {
   });
 };
 
-module.exports.toYearInterval = function( val ){
-  const max_time = 8640000000000000;
-  
-  const year_sup = new Date(max_time).getUTCFullYear();
-  const year_inf = new Date(-max_time).getUTCFullYear();
-  
-  //Replaces undefined values with minimum/maximum dates so e.g. interval (,) becomes (year_inf, year_sup).
-  let lower_bound = val.lyear? val.lyear : year_inf;
-  let upper_bound = val.ryear? val.ryear : year_sup;
+module.exports.toTimeInterval = function( val ){
+  const max_s = 864e13;
+  let min_date = new Date(-max_s);
+  let max_date = new Date(max_s);
+  //let ms_in_day = 8.64e7; 
 
-  if(val.single){
-    return {
-      start: val.single,
-      end: val.single
-    };
-  }
-
-  lower_bound += (val.lyear && ['(',']'].includes(val.lpar) && lower_bound > year_inf ) ? 1 : 0;
-  upper_bound -= (val.ryear && [')','['].includes(val.rpar) && upper_bound < year_sup ) ? 1 : 0;
+  let start = val.start && val.start.in ? this.parseDate(val.start.in) : min_date; 
+  let end = val.end && val.end.in ? this.parseDate(val.end.in) : max_date;
 
   return {
-    start: lower_bound,
-    end: upper_bound
+    start: start,
+    end: end
+    //start_daysfromepoch: Math.floor(start / ms_in_day),
+    //end_daysfromepoch: Math.floor(end / ms_in_day),
   };
+};
+
+module.exports.parseDate = function( val ){
+  // JS date parser cannot handle negative dates correctly therefore we parse dates manually
+  let re = /^(?<year>-?\d{4,})(?:-(?<month>\d{2})(?:-(?<day>\d{2}))?)?$/;
+  let groups = re.exec(val).groups;
+  let month = groups.month === undefined ? 1 : groups.month;
+  let day = groups.day === undefined ? 1 : groups.day;
+  return new Date(Date.UTC(groups.year, month - 1, day));
+};
+
+module.exports.toESStrictDate = function( date ){
+ return date.toISOString().split('T')[0];
 };
