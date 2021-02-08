@@ -1,8 +1,8 @@
 {
-  "name": "pelias-model",
+  "name": "pelias-model-gh",
   "version": "0.0.0-development",
   "author": "pelias",
-  "description": "Pelias data models",
+  "description": "Pelias data models - temporal extension",
   "homepage": "https://github.com/pelias/model",
   "license": "MIT",
   "main": "index.js",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/pelias/model.git"
+    "url": "https://github.com/soduco/pelias-model-gh.git"
   },
   "keywords": [
     "pelias",

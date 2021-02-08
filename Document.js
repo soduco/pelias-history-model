@@ -105,7 +105,7 @@ Document.prototype.toESDocument = function() {
     population: this.population,
     addendum: {},
     shape: this.shape,
-    valid_time: this.valid_time
+    validity: this.validtime
   };
 
   // add encoded addendum namespaces
@@ -141,8 +141,8 @@ Document.prototype.toESDocument = function() {
   if( !Object.keys( doc.shape || {} ).length ){
     delete doc.shape;
   }
-  if (!this.valid_time) {
-    delete doc.valid_time;
+  if (!this.validtime) {
+    delete doc.validity;
   }
 
   return {
@@ -625,22 +625,27 @@ Document.prototype.getParentFields = () => {
 Document.prototype.setValidTime = function( val ) {
   validate.truthy(val)
   .type('object', val)
-  .timespan(val);
+  .dateInterval(val);
 
-  let vtime = transform.toTimeInterval(val);
+  let interval = transform.toDateInterval(val);
   
-  validate.geq(vtime.end, vtime.start);
+  validate.geq(interval.end, interval.start);
 
-  vtime.start = transform.toESStrictDate(vtime.start);
-  vtime.end = transform.toESStrictDate(vtime.end);
+  let validtime = {};
+  if (interval.start) {
+    validtime.start = transform.toESStrictDate(interval.start);
+  }
+  if (interval.end) {
+    validtime.end = transform.toESStrictDate(interval.end);
+  }
   
-  this.valid_time = vtime;
+  this.validtime = validtime;
 
   return this;
 };
 
 Document.prototype.getValidTime = function(){
-  return this.valid_time;
+  return this.validtime;
 };
 
 // export

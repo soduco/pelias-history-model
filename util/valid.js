@@ -129,21 +129,17 @@ module.exports.regex = {
   }
 };
 
-module.exports.timespan = function( val ){
-  // either start or end can be unset but not both
-  if (!(val.start || val.end)){
-    throw new PeliasModelError(`valid time must have at least one bound`);
-  }
+module.exports.dateInterval = function( val ){
   if( val.start ){
-    this.timespanExtremity(val.start);
+    this.dateIntervalExtremity(val.start);
   }
   if( val.end ){
-    this.timespanExtremity(val.end);
+    this.dateIntervalExtremity(val.end);
   }
   return this;
 };
 
-module.exports.timespanExtremity = function( val ){
+module.exports.dateIntervalExtremity = function( val ){
   this.type('object', val).truthy(val);
   // Contains either a 'in' element, or a pair or 'earliest' and 'latest' elements.
   if( val.in ){
@@ -151,7 +147,7 @@ module.exports.timespanExtremity = function( val ){
   }else if (val.earliest && val.latest){
     this.date(val.earliest).date(val.latest);
   }else{
-    throw new PeliasModelError(`invalid timespan ${val}`);
+    throw new PeliasModelError(`invalid date interval ${val}`);
   }
   return this;
 };

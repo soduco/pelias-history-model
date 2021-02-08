@@ -32,21 +32,22 @@ module.exports.toULLR = function( val ) {
   });
 };
 
-module.exports.toTimeInterval = function( val ){
-  const max_s = 864e13;
-  let min_date = new Date(-max_s);
-  let max_date = new Date(max_s);
+module.exports.toDateInterval = function( val ){
+  //const max_s = 864e13;
+  //let min_date = new Date(-max_s);
+  //let max_date = new Date(max_s);
   //let ms_in_day = 8.64e7; 
 
-  let start = val.start && val.start.in ? this.parseDate(val.start.in) : min_date; 
-  let end = val.end && val.end.in ? this.parseDate(val.end.in) : max_date;
-
-  return {
-    start: start,
-    end: end
-    //start_daysfromepoch: Math.floor(start / ms_in_day),
-    //end_daysfromepoch: Math.floor(end / ms_in_day),
-  };
+  //let start = val.start && val.start.in ? this.parseDate(val.start.in) : min_date; 
+  //let end = val.end && val.end.in ? this.parseDate(val.end.in) : max_date;
+  let interval = {};
+  if (val.start && val.start.in){
+    interval.start = this.parseDate(val.start.in);
+  }
+  if(val.end && val.end.in){
+    interval.end = this.parseDate(val.end.in);
+  }
+  return interval;
 };
 
 module.exports.parseDate = function( val ){
