@@ -137,11 +137,10 @@ module.exports.tests.complete = function(test) {
         'wikipedia': { 'slug': 'HackneyCityFarm' },
         'geonames': { 'foreignkey': 1 }
       },
-      'validtime': { 'start': '1850-01-01',
-                    'end': '1890-01-01',
-                      //'start_daysfromepoch': -43829,
-                      //'end_daysfromepoch': -29219
-                     }
+      'validtime': {
+        'start': -43829,
+        'end': -29219
+      }
     }, 'valid document body');
 
     t.end();

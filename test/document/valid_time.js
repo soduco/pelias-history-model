@@ -7,8 +7,8 @@ module.exports.tests.getValidTime = function (test) {
   test('getValidTime', function (t) {
     let doc = new Document('mysource', 'mylayer', 'myid');
     t.same(doc.getValidTime(), undefined, 'getter works');
-    doc.validtime = {start: {in: '1850'}, end: {in: '2000'}};
-    t.same(doc.getValidTime(), doc.validtime, 'getter works');
+    doc.validtime = {start: -43829, end: 10957};
+    t.same(doc.getValidTime(), {start: -43829, end: 10957}, 'getter works');
     t.end();
   });
 };
@@ -18,7 +18,7 @@ module.exports.tests.setValidTime = function(test) {
     const doc = new Document('mysource','mylayer','myid');
     const vtime = {start: {in: '1850'}, end: {in: '2000'}};
     t.equal(doc.setValidTime(vtime), doc, 'chainable');
-    t.same(doc.validtime, {start: '1850-01-01', end: '2000-01-01'}, 'setter works');
+    t.same(doc.validtime, {start: -43829, end: 10957}, 'setter works');
     t.end();
   });
   
@@ -27,8 +27,8 @@ module.exports.tests.setValidTime = function(test) {
     const doc = new Document('mysource','mylayer','myid');
     t.throws( doc.setValidTime.bind(doc), null, 'invalid args (none)' );
     t.throws( doc.setValidTime.bind(doc,-1), null, 'invalid args (not an object)' );
-    t.throws( doc.setValidTime.bind(doc,{start: {in: 'not a date'}}), null, 'start should be a date');
-    t.throws( doc.setValidTime.bind(doc,{end: {in: 'not a date'}}), null, 'end should be a date');
+    t.throws( doc.setValidTime.bind(doc,{start: {in: 'not a date'}}), null, 'start should be a long');
+    t.throws( doc.setValidTime.bind(doc,{end: {in: null}}), null, 'end should be a long');
     t.same( doc.setValidTime({}).getValidTime(), {}, 'empty input valid time should lead to empty output valid time');
     t.end();
   });
@@ -37,11 +37,11 @@ module.exports.tests.setValidTime = function(test) {
     const doc = new Document('mysource','mylayer','myid');
     
     doc.setValidTime({start: {in: '1850'}, end: {in: '2000'}});
-    let validtime = {start: '1850-01-01', end: '2000-01-01'};
+    let validtime = {start: -43829, end: 10957};
     t.same(doc.validtime, validtime, 'year-only valid time shoud be transformed to year-month-day');
     
     doc.setValidTime({start: {in: '1850-02'}, end: {in: '2000-05'}});
-    validtime = {start: '1850-02-01', end: '2000-05-01'};
+    validtime = {start: -43798, end: 11078};
     t.same(doc.validtime, validtime, 'year-month valid time shoud be transformed to year-month-day');
 
     validtime = {start: '1860', end: '1850'};

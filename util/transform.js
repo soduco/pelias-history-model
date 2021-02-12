@@ -33,13 +33,6 @@ module.exports.toULLR = function( val ) {
 };
 
 module.exports.toDateInterval = function( val ){
-  //const max_s = 864e13;
-  //let min_date = new Date(-max_s);
-  //let max_date = new Date(max_s);
-  //let ms_in_day = 8.64e7; 
-
-  //let start = val.start && val.start.in ? this.parseDate(val.start.in) : min_date; 
-  //let end = val.end && val.end.in ? this.parseDate(val.end.in) : max_date;
   let interval = {};
   if (val.start && val.start.in){
     interval.start = this.parseDate(val.start.in);
@@ -62,3 +55,7 @@ module.exports.parseDate = function( val ){
 module.exports.toESStrictDate = function( date ){
  return date.toISOString().split('T')[0];
 };
+
+module.exports.daysSinceEpoch = function( date ){
+  return Math.floor(date.getTime() / 86400000);
+ };

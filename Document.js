@@ -105,7 +105,7 @@ Document.prototype.toESDocument = function() {
     population: this.population,
     addendum: {},
     shape: this.shape,
-    validity: this.validtime
+    validtime: this.validtime
   };
 
   // add encoded addendum namespaces
@@ -142,7 +142,7 @@ Document.prototype.toESDocument = function() {
     delete doc.shape;
   }
   if (!this.validtime) {
-    delete doc.validity;
+    delete doc.validtime;
   }
 
   return {
@@ -633,10 +633,10 @@ Document.prototype.setValidTime = function( val ) {
 
   let validtime = {};
   if (interval.start) {
-    validtime.start = transform.toESStrictDate(interval.start);
+    validtime.start = transform.daysSinceEpoch(interval.start);
   }
   if (interval.end) {
-    validtime.end = transform.toESStrictDate(interval.end);
+    validtime.end = transform.daysSinceEpoch(interval.end);
   }
   
   this.validtime = validtime;
