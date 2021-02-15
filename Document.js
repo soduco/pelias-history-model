@@ -627,20 +627,11 @@ Document.prototype.setValidTime = function( val ) {
   .type('object', val)
   .dateInterval(val);
 
-  let interval = transform.toDateInterval(val);
+  const interval = transform.toDaysSinceEpochInterval(val);
   
   validate.geq(interval.end, interval.start);
-
-  let validtime = {};
-  if (interval.start) {
-    validtime.start = transform.daysSinceEpoch(interval.start);
-  }
-  if (interval.end) {
-    validtime.end = transform.daysSinceEpoch(interval.end);
-  }
   
-  this.validtime = validtime;
-
+  this.validtime = interval;
   return this;
 };
 

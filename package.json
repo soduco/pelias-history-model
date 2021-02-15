@@ -6,6 +6,7 @@
   "homepage": "https://github.com/pelias/model",
   "license": "MIT",
   "main": "index.js",
+  "private": true,
   "scripts": {
     "units": "./bin/units",
     "test": "npm run units",
@@ -19,7 +20,9 @@
   },
   "keywords": [
     "pelias",
-    "model"
+    "model",
+    "extension",
+    "geohistorical"
   ],
   "bugs": {
     "url": "https://github.com/pelias/model/issues"
@@ -30,12 +33,13 @@
   "dependencies": {
     "lodash": "^4.6.1",
     "pelias-config": "^4.5.0",
+    "pelias-contrib-gh": "^0.0.0-dev",
     "through2": "^3.0.0"
   },
   "devDependencies": {
-    "stream-mock": "^2.0.3",
     "precommit-hook": "^3.0.0",
     "proxyquire": "^2.0.0",
+    "stream-mock": "^2.0.3",
     "tap-spec": "^5.0.0",
     "tape": "^5.0.0"
   },

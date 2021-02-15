@@ -1,6 +1,5 @@
 var _ = require('lodash'),
-    PeliasModelError = require('../errors').PeliasModelError,
-    transform = require('./transform');
+    PeliasModelError = require('../errors').PeliasModelError;
 
 module.exports.type = function( type, val ){
   if( type.toLowerCase() === 'array' ){
@@ -131,15 +130,15 @@ module.exports.regex = {
 
 module.exports.dateInterval = function( val ){
   if( val.start ){
-    this.dateIntervalExtremity(val.start);
+    this.dateIntervalBound(val.start);
   }
   if( val.end ){
-    this.dateIntervalExtremity(val.end);
+    this.dateIntervalBound(val.end);
   }
   return this;
 };
 
-module.exports.dateIntervalExtremity = function( val ){
+module.exports.dateIntervalBound = function( val ){
   this.type('object', val).truthy(val);
   // Contains either a 'in' element, or a pair or 'earliest' and 'latest' elements.
   if( val.in ){
@@ -147,17 +146,17 @@ module.exports.dateIntervalExtremity = function( val ){
   }else if (val.earliest && val.latest){
     this.date(val.earliest).date(val.latest);
   }else{
-    throw new PeliasModelError(`invalid date interval ${val}`);
+    throw new PeliasModelError(`invalid LinkedPlaces time interval ${val}`);
   }
   return this;
 };
 
 module.exports.date = function( val ){
-  let date = transform.parseDate(val);  
+  const date = new Date(val);  
   if ( isNaN(date.getTime()) ){
     throw new PeliasModelError(`invalid date ${val}`);
   }
-    return this;
+  return this;
 };
 
 module.exports.geq = function( a, b ){

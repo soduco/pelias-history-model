@@ -1,3 +1,4 @@
+const plaindate = require('pelias-contrib-gh').plaindate;
 
 module.exports.uppercase = function( val ){
   return val.toUpperCase();
@@ -32,30 +33,21 @@ module.exports.toULLR = function( val ) {
   });
 };
 
-module.exports.toDateInterval = function( val ){
-  let interval = {};
+module.exports.toDaysSinceEpochInterval = function( val ){
+  const days = (bound) => {
+      const date = new Date(bound);
+      return plaindate.to_days_since_epoch(date);
+  };
+
+  const interval = {};
+
   if (val.start && val.start.in){
-    interval.start = this.parseDate(val.start.in);
+    interval.start = days(val.start.in);
   }
-  if(val.end && val.end.in){
-    interval.end = this.parseDate(val.end.in);
+
+  if (val.end && val.end.in){
+    interval.end = days(val.end.in);
   }
+  
   return interval;
 };
-
-module.exports.parseDate = function( val ){
-  // JS date parser cannot handle negative dates correctly therefore we parse dates manually
-  let re = /^(?<year>-?\d{4,})(?:-(?<month>\d{2})(?:-(?<day>\d{2}))?)?$/;
-  let groups = re.exec(val).groups;
-  let month = groups.month === undefined ? 1 : groups.month;
-  let day = groups.day === undefined ? 1 : groups.day;
-  return new Date(Date.UTC(groups.year, month - 1, day));
-};
-
-module.exports.toESStrictDate = function( date ){
- return date.toISOString().split('T')[0];
-};
-
-module.exports.daysSinceEpoch = function( date ){
-  return Math.floor(date.getTime() / 86400000);
- };
