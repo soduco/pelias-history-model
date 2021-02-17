@@ -174,9 +174,9 @@ Document.prototype.getId = function(){
 // source
 Document.prototype.setSource = function( source ){
 
-  source = transform.lowercase(source);
   validate.type('string', source);
   validate.truthy(source);
+  source = transform.lowercase(source);
 
   this.source = source;
   return this;
